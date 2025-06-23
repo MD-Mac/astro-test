@@ -1,5 +1,17 @@
 ---
+// Import components
+import Navigation from '../components/Navigation.astro';
+import Footer from '../components/Footer.astro';
+// Import styles
+import '../styles/global.css';
 
+// Define page metadata variables
+const metaTitle = "About Us";
+const metaDescription = "This is the about page of our company.";
+const trackPage = true;
+
+// Define page title variables
+const pageTitle = "About Our Company";
 ---
 
 <html lang="en">
@@ -8,18 +20,15 @@
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>About Us</title>
+		<title>{metaTitle}</title>
+		<meta name="description" content={metaDescription} />
+        <meta name="robots" content={trackPage ? "index, follow" : "noindex, nofollow"} />
 	</head>
 	<body>
 
-        <nav>
-            <a href="/">Home</a>
-            <a href="/about">About</a>
-            <a href="/blog">Blog</a>
-            <!-- <a href="/contact">Contact</a> -->
-        </nav>
+        <Navigation />
 
-		<h1>About Our Company</h1>
+		<h1>{pageTitle}</h1>
 		<p>
 			Welcome to our company! We are dedicated to providing the best service possible. Lorem ipsum
 			dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et
@@ -43,5 +52,7 @@
 			<li>Jane Smith - CTO</li>
 			<li>Peter Jones - Lead Developer</li>
 		</ul>
+
+		<Footer />
 	</body>
 </html>
