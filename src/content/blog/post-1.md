@@ -18,7 +18,7 @@ Welcome to my _new travel blog_ about exploring Africa! Here, I will share my am
 
 ## What I've experienced
 
-1. **Big Five Sightings**: I was lucky enough to see all of the Big Five during my first week - lions, elephants, buffalos, leopards, and rhinos!
+1. **Big Five Sightings**: I was lucky enough to see all of the [Big Five](https://www.rhinoafrica.com/en/experiences/big-5-safari/2264) during my first week - lions, elephants, buffalos, leopards, and rhinos!
 
 2. **Breathtaking Landscapes**: From the endless plains of the Serengeti to the dramatic escarpments of the Ngorongoro Crater, every view took my breath away.
 
