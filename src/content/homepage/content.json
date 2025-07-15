@@ -1,0 +1,36 @@
+{
+    "metaTitle": "Home Page | Rhino Africa",
+    "metaDescription": "Welcome to the homepage of the website",
+    "pageTitle": "Rhino Africa SSG",
+    "pageSubtitle": "Let's test this out!",
+    "homePageIntro": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia dolor sit, amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt, ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit, qui in ea voluptate velit esse, quam nihil molestiae consequatur, vel illum, qui dolorem eum fugiat, quo voluptas nulla pariatur?",
+    "sections": {
+        "destinations": {
+            "title": "Destinations",
+            "destinationList": [
+                "South Africa",
+                "Kenya",
+                "Tanzania",
+                "Uganda",
+                "Rwanda",
+                "Zambia",
+                "Zimbabwe",
+                "Mozambique",
+                "Namibia",
+                "Botswana",
+                "Lesotho",
+                "Swaziland",
+                "Malawi"
+            ]
+        },
+        "topTours": {
+            "title": "Top Tours",
+            "tourList": [
+                "Best of Kenya",
+                "Best of South Africa",
+                "Beach & Bush: Zanzibar & Serengeti",
+                "5 days in the Kruger National Park"
+            ]
+        }
+    }
+}

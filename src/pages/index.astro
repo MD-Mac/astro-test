@@ -1,13 +1,142 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-const pageTitle = "Home Page";
----
-<BaseLayout pageTitle={pageTitle}>
-  <h2>Some more homepage content</h2>
+import { getEntry } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
 
-  <ul>
-	<li>Item 1</li>
-	<li>Item 2</li>
-	<li>Item 3</li>
-  </ul>
+// Get homepage data from dedicated homepage collection
+const homepageData = await getEntry("homepage", "content");
+if (!homepageData) {
+  throw new Error("Homepage content not found");
+}
+
+// Extract data from the collection
+const { 
+  metaTitle, 
+  metaDescription, 
+  pageTitle, 
+  pageSubtitle, 
+  homePageIntro, 
+  sections 
+} = homepageData.data;
+
+// Static assets (could also be moved to the collection if needed)
+const heroImage = "/images/homepage/rhino-sunset.jpg";
+---
+
+<BaseLayout pageTitle={metaTitle} metaDescription={metaDescription}>
+  <section class="hero" style={`background-image: url('${heroImage}');`}>
+    <div class="hero-content">
+      <h1 class="hero-content-title">{pageTitle}</h1>
+      <p class="hero-content-text">{pageSubtitle}</p>
+    </div>
+  </section>
+
+  <section class="body-content homepage-content">
+    <div class="container">
+      <!-- Intro text from collection -->
+      <p class="intro">
+        {homePageIntro}
+      </p>
+
+      <!-- Destinations section from collection -->
+      <h2 class="section-title">{sections.destinations.title}</h2>
+      <ul class="list destinations-list">
+        {sections.destinations.destinationList.map((destination) => (
+          <li>{destination}</li>
+        ))}
+      </ul>
+
+      <!-- Top Tours section from collection -->
+      <h2 class="section-title">{sections.topTours.title}</h2>
+      <ul class="list top-tours-list">
+        {sections.topTours.tourList.map((tour) => (
+          <li>{tour}</li>
+        ))}
+      </ul>
+    </div>
+  </section>
 </BaseLayout>
+
+<style lang="scss">
+.hero {
+  background-color: #f1f5f9;
+  padding: 100px 20px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+
+  &-content {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .hero-content-title {
+    color: #fff;
+    font-size: 48px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .hero-content-text {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 400;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+}
+
+.body-content {
+  padding: 100px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: Montserrat, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #272727;
+  font-weight: 400;
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
+
+.homepage-content {
+  .section-title {
+    font-size: 24px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    li {
+      width:calc(50% - 20px);
+      display: inline-block;
+      margin:0 10px 20px;
+      padding: 10px;
+      border: 1px solid #e2e8f0;
+      border-radius: 5px;
+      text-align: center;
+    }
+  }
+}
+</style>

@@ -1,0 +1,387 @@
+---
+import { getCollection } from "astro:content";
+import BlogLayout from "../../layouts/BlogLayout.astro";
+import { SITE_CONFIG } from "../../config/site.ts";
+
+// Generate all blog post pages
+export async function getStaticPaths() {
+    const blogEntries = await getCollection("blog");
+    return blogEntries.map((entry) => ({
+        params: { slug: entry.slug },
+        props: { entry },
+    }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+
+// Calculate reading time (rough estimate)
+const wordsPerMinute = 200;
+const textContent = entry.body;
+const wordCount = textContent.split(/\s+/).length;
+const readingTime = Math.ceil(wordCount / wordsPerMinute);
+
+// Format date
+const formattedDate = entry.data.pubDate.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+});
+
+// Related posts (same tags)
+const allPosts = await getCollection("blog");
+const relatedPosts = allPosts
+    .filter(
+        (post) =>
+            post.slug !== entry.slug &&
+            !post.data.draft &&
+            post.data.tags.some((tag) => entry.data.tags.includes(tag)),
+    )
+    .slice(0, 3);
+---
+
+<BlogLayout
+    pageTitle={entry.data.title}
+    metaDescription={entry.data.description}
+    ogImage={entry.data.image.url}
+>
+    <header class="hero blog-header" style={`background-image: url('${entry.data.image.url}');`}>
+        <div class="hero-content">
+            <time datetime={entry.data.pubDate.toISOString()}>{formattedDate}</time>
+            <h1>{entry.data.title}</h1>
+            <p class="post-description">{entry.data.description}</p>
+            <div class="post-author">
+                <span>By <strong>{entry.data.author}</strong></span>
+            </div>
+        </div>
+    </header>
+    <article class="blog-post">
+        <div class="post-content">
+            <Content />
+        </div>
+    </article>
+
+    {
+        relatedPosts.length > 0 && (
+            <section class="related-posts">
+                <h2>You might also like</h2>
+                <div class="related-grid">
+                    {relatedPosts.map((post) => (
+                        <article class="related-card">
+                            <a href={`/blog/${post.slug}/`}>
+                                <img
+                                    src={post.data.image.url}
+                                    alt={post.data.image.alt}
+                                />
+                                <div class="card-content">
+                                    <h3>{post.data.title}</h3>
+                                    <p>{post.data.description}</p>
+                                    <span class="read-more">Read more →</span>
+                                </div>
+                            </a>
+                        </article>
+                    ))}
+                </div>
+            </section>
+        )
+    }
+</BlogLayout>
+
+<style lang="scss">
+.blog-post {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 120px 20px 60px;
+}
+
+.blog-header {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 500px;
+    padding-top: 120px;
+    padding-bottom: 30px;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        opacity: 0.5;
+        z-index: 1;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        max-width: 900px;
+        margin: 0 auto;
+        text-align: center;
+        color: #fff;
+
+        > * {
+            color: inherit;
+        }
+    }
+}
+
+.post-header {
+    margin-bottom: 40px;
+
+    .post-meta {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        margin-bottom: 20px;
+        font-size: 0.9rem;
+        color: #666;
+
+        .featured-badge {
+            background: #66944c;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        color: #272727;
+        margin-bottom: 20px;
+        line-height: 1.2;
+    }
+
+    .post-description {
+        font-size: 1.2rem;
+        color: #555;
+        margin-bottom: 20px;
+        line-height: 1.6;
+    }
+
+    .post-author {
+        margin-bottom: 20px;
+        color: #666;
+    }
+}
+
+.post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 30px;
+
+    .tag {
+        background: #f0f0f0;
+        color: #666;
+        padding: 6px 16px;
+        border-radius: 25px;
+        font-size: 0.9rem;
+        text-transform: lowercase;
+    }
+}
+
+.post-image {
+    margin-bottom: 40px;
+
+    img {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        border-radius: 12px;
+    }
+}
+
+.post-content {
+    line-height: 1.8;
+    font-size: 1.1rem;
+    color: #333;
+
+    :global(h2) {
+        font-size: 1.8rem;
+        color: #272727;
+        margin: 40px 0 20px;
+    }
+
+    :global(h3) {
+        font-size: 1.4rem;
+        color: #272727;
+        margin: 30px 0 15px;
+    }
+
+    :global(p) {
+        margin-bottom: 20px;
+    }
+
+    :global(ul),
+    :global(ol) {
+        margin: 20px 0;
+        padding-left: 30px;
+    }
+
+    :global(li) {
+        margin-bottom: 8px;
+    }
+
+    :global(blockquote) {
+        border-left: 4px solid #66944c;
+        padding-left: 20px;
+        margin: 30px 0;
+        font-style: italic;
+        color: #555;
+    }
+
+    :global(img) {
+        width: 100%;
+        height: auto;
+        margin-bottom: 20px;
+    }
+}
+
+.post-footer {
+    margin-top: 60px;
+    padding-top: 40px;
+    border-top: 1px solid #e0e0e0;
+
+    .share-section h3 {
+        margin-bottom: 20px;
+        color: #272727;
+    }
+
+    .share-buttons {
+        display: flex;
+        gap: 15px;
+    }
+
+    .share-btn {
+        background: #66944c;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+            background: #557a3d;
+        }
+
+        &.twitter {
+            background: #1da1f2;
+
+            &:hover {
+                background: #0d8bd9;
+            }
+        }
+
+        &.facebook {
+            background: #4267b2;
+
+            &:hover {
+                background: #365899;
+            }
+        }
+    }
+}
+
+.related-posts {
+    max-width: 1200px;
+    margin: 80px auto 0;
+    padding: 0 20px;
+
+    h2 {
+        font-size: 2rem;
+        color: #272727;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+}
+
+.related-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.related-card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    a {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+    img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+    }
+
+    .card-content {
+        padding: 20px;
+
+        h3 {
+            font-size: 1.2rem;
+            color: #272727;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        p {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .read-more {
+            color: #66944c;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .blog-post {
+        padding: 100px 15px 40px;
+    }
+
+    .post-header h1 {
+        font-size: 2rem;
+    }
+
+    .post-image img {
+        height: 250px;
+    }
+
+    .share-buttons {
+        flex-direction: column;
+    }
+
+    .related-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+

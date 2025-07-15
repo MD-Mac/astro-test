@@ -1,0 +1,18 @@
+{
+  "pageTitle": "Travel Blog",
+  "pageSubtitle": "Discover amazing travel stories, safari tips, and African adventure insights from our travel experts.",
+  "metaTitle": "Travel Blog | Rhino Africa",
+  "metaDescription": "Discover amazing travel stories, safari tips, and African adventure insights from our travel experts.",
+  "sections": {
+    "featured": {
+      "title": "Latest News",
+      "subtitle": "Keeping up with the most interesting news.",
+      "description": "Featured stories and updates from our travel experts"
+    },
+    "allPosts": {
+      "title": "All Posts",
+      "subtitle": "Browse all our travel stories and insights",
+      "description": "Complete collection of our travel blog posts"
+    }
+  }
+} 
